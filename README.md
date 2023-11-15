@@ -42,25 +42,64 @@ Cuando un conjunto de usuarios consulta un enésimo número (superior a 1000000)
 
     ` node FibonacciApp.js`
 
+![](images/solucion/ejecucion.png)
+
 6. Antes de verificar si el endpoint funciona, en Azure vaya a la sección de *Networking* y cree una *Inbound port rule* tal como se muestra en la imágen. Para verificar que la aplicación funciona, use un browser y user el endpoint `http://xxx.xxx.xxx.xxx:3000/fibonacci/6`. La respuesta debe ser `The answer is 8`.
 
 ![](images/part1/part1-vm-3000InboudRule.png)
 
+![](images/solucion/puerto.png)
+
+![](images/solucion/8.png)
+
 7. La función que calcula en enésimo número de la secuencia de Fibonacci está muy mal construido y consume bastante CPU para obtener la respuesta. Usando la consola del Browser documente los tiempos de respuesta para dicho endpoint usando los siguintes valores:
     * 1000000
+
+        ![](images/solucion/imagen.png)
+
     * 1010000
+
+        ![](images/solucion/imagen1.png)
+
     * 1020000
+        
+        ![](images/solucion/imagen2.png)
+
     * 1030000
+
+        ![](images/solucion/imagen3.png)
+
     * 1040000
+
+        ![](images/solucion/imagen4.png)
+
     * 1050000
+
+        ![](images/solucion/imagen5.png)
+
     * 1060000
+
+        ![](images/solucion/imagen6.png)
+
     * 1070000
+
+        ![](images/solucion/imagen7.png)
+
     * 1080000
-    * 1090000    
+
+        ![](images/solucion/imagen8.png)
+
+    * 1090000
+
+        ![](images/solucion/imagen9.png)    
 
 8. Dírijase ahora a Azure y verifique el consumo de CPU para la VM. (Los resultados pueden tardar 5 minutos en aparecer).
 
 ![Imágen 2](images/part1/part1-vm-cpu.png)
+
+![](images/solucion/cpu.png)
+
+![](images/solucion/cpuh.png)
 
 9. Ahora usaremos Postman para simular una carga concurrente a nuestro sistema. Siga estos pasos.
     * Instale newman con el comando `npm install newman -g`. Para conocer más de Newman consulte el siguiente [enlace](https://learning.getpostman.com/docs/postman/collection-runs/command-line-integration-with-newman/).
@@ -72,10 +111,23 @@ Cuando un conjunto de usuarios consulta un enésimo número (superior a 1000000)
     newman run ARSW_LOAD-BALANCING_AZURE.postman_collection.json -e [ARSW_LOAD-BALANCING_AZURE].postman_environment.json -n 10 &
     newman run ARSW_LOAD-BALANCING_AZURE.postman_collection.json -e [ARSW_LOAD-BALANCING_AZURE].postman_environment.json -n 10
     ```
+![](images/solucion/insNewman.png)
+
+![](images/solucion/dir.png)
+
+![](images/solucion/vi1.png)
+
+![](images/solucion/vi2.png)
+
+![](images/solucion/comando.png)
+
+![](images/solucion/comandocpu.png)
 
 10. La cantidad de CPU consumida es bastante grande y un conjunto considerable de peticiones concurrentes pueden hacer fallar nuestro servicio. Para solucionarlo usaremos una estrategia de Escalamiento Vertical. En Azure diríjase a la sección *size* y a continuación seleccione el tamaño `B2ms`.
 
 ![Imágen 3](images/part1/part1-vm-resize.png)
+
+![](images/solucion/B2ms.png)
 
 11. Una vez el cambio se vea reflejado, repita el paso 7, 8 y 9.
 12. Evalue el escenario de calidad asociado al requerimiento no funcional de escalabilidad y concluya si usando este modelo de escalabilidad logramos cumplirlo.
