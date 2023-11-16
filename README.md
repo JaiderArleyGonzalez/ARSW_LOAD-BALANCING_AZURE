@@ -256,7 +256,7 @@ Dado que hubo una reducción en el tiempo de ejecución y una disminución en el
     | 1090000    | 31.09   |
 
     Antes del escalamiento vertical, la función de Fibonacci tenía tiempos de respuesta más altos, indicando una carga de trabajo más pesada para la VM original (B1ls). Después de aplicar la estrategia de escalamiento vertical, al cambiar a una VM más grande (B2ms), se observa una mejora en los tiempos de respuesta. Esto sugiere que la VM con mayores recursos puede manejar la carga de trabajo de manera más eficiente, reduciendo el tiempo necesario para calcular los números de Fibonacci. Sin embargo, a pesar de la mejora, los tiempos de respuesta aún pueden considerarse altos debido a la naturaleza ineficiente de la implementación de la función de Fibonacci.
-    
+
 5. Adjunte imágen del consumo de CPU de la VM e interprete por qué la función consume esa cantidad de CPU.
     
     **Consumo de CPU base:**
@@ -308,33 +308,43 @@ Antes de continuar puede eliminar el grupo de recursos anterior para evitar gast
 
 1. El Balanceador de Carga es un recurso fundamental para habilitar la escalabilidad horizontal de nuestro sistema, por eso en este paso cree un balanceador de carga dentro de Azure tal cual como se muestra en la imágen adjunta.
 
-![](images/part2/part2-lb-create.png)
+    ![](images/part2/part2-lb-create.png)
 
-![](images/solucion/loadbalancer.png)
+    **Balanceador de carga creado:**
+
+    ![](images/solucion/loadbalancer.png)
 
 2. A continuación cree un *Backend Pool*, guiese con la siguiente imágen.
 
-![](images/part2/part2-lb-bp-create.png)
+    ![](images/part2/part2-lb-bp-create.png)
 
-![](images/solucion/pool.png)
+    **Backend Pool:**
+
+    ![](images/solucion/pool.png)
 
 3. A continuación cree un *Health Probe*, guiese con la siguiente imágen.
 
-![](images/part2/part2-lb-hp-create.png)
+    ![](images/part2/part2-lb-hp-create.png)
 
-![](images/solucion/health.png)
+    **Health Probe:**
+
+    ![](images/solucion/health.png)
 
 4. A continuación cree un *Load Balancing Rule*, guiese con la siguiente imágen.
 
-![](images/part2/part2-lb-lbr-create.png)
+    ![](images/part2/part2-lb-lbr-create.png)
 
-![](images/solucion/RULE.png)
+    **Load Balancing Rule:**
+
+    ![](images/solucion/RULE.png)
 
 5. Cree una *Virtual Network* dentro del grupo de recursos, guiese con la siguiente imágen.
 
-![](images/part2/part2-vn-create.png)
+    ![](images/part2/part2-vn-create.png)
 
-![](images/solucion/network.png)
+    **Virtual Network creado:**
+
+    ![](images/solucion/network.png)
 
 #### Crear las maquinas virtuales (Nodos)
 
@@ -342,100 +352,210 @@ Ahora vamos a crear 3 VMs (VM1, VM2 y VM3) con direcciones IP públicas standar 
 
 1. En la configuración básica de la VM guíese por la siguiente imágen. Es importante que se fije en la "Avaiability Zone", donde la VM1 será 1, la VM2 será 2 y la VM3 será 3.
 
-![](images/part2/part2-vm-create1.png)
+    ![](images/part2/part2-vm-create1.png)
 
 2. En la configuración de networking, verifique que se ha seleccionado la *Virtual Network*  y la *Subnet* creadas anteriormente. Adicionalmente asigne una IP pública y no olvide habilitar la redundancia de zona.
 
-![](images/part2/part2-vm-create2.png)
+    ![](images/part2/part2-vm-create2.png)
 
 3. Para el Network Security Group seleccione "avanzado" y realice la siguiente configuración. No olvide crear un *Inbound Rule*, en el cual habilite el tráfico por el puerto 3000. Cuando cree la VM2 y la VM3, no necesita volver a crear el *Network Security Group*, sino que puede seleccionar el anteriormente creado.
 
-![](images/part2/part2-vm-create3.png)
+    ![](images/part2/part2-vm-create3.png)
 
 4. Ahora asignaremos esta VM a nuestro balanceador de carga, para ello siga la configuración de la siguiente imágen.
 
-![](images/part2/part2-vm-create4.png)
+    ![](images/part2/part2-vm-create4.png)
 
-![](images/solucion/VM1.png)
+    **Máquina virtual VM1:**
 
-![](images/solucion/VM2.png)
+    ![](images/solucion/VM1.png)
+
+    **Máquina virtual VM2:**
+
+    ![](images/solucion/VM2.png)
 
 5. Finalmente debemos instalar la aplicación de Fibonacci en la VM. para ello puede ejecutar el conjunto de los siguientes comandos, cambiando el nombre de la VM por el correcto
 
-```
-git clone https://github.com/daprieto1/ARSW_LOAD-BALANCING_AZURE.git
+    ```
+    git clone https://github.com/daprieto1/ARSW_LOAD-BALANCING_AZURE.git
 
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-source /home/vm1/.bashrc
-nvm install node
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+    source /home/vm1/.bashrc
+    nvm install node
 
-cd ARSW_LOAD-BALANCING_AZURE/FibonacciApp
-npm install
+    cd ARSW_LOAD-BALANCING_AZURE/FibonacciApp
+    npm install
 
-npm install forever -g
-forever start FibonacciApp.js
-```
+    npm install forever -g
+    forever start FibonacciApp.js
+    ```
 
-Realice este proceso para las 3 VMs, por ahora lo haremos a mano una por una, sin embargo es importante que usted sepa que existen herramientas para aumatizar este proceso, entre ellas encontramos Azure Resource Manager, OsDisk Images, Terraform con Vagrant y Paker, Puppet, Ansible entre otras.
+    Realice este proceso para las 3 VMs, por ahora lo haremos a mano una por una, sin embargo es importante que usted sepa que existen herramientas para aumatizar este proceso, entre ellas encontramos Azure Resource Manager, OsDisk Images, Terraform con Vagrant y Paker, Puppet, Ansible entre otras.
+    
+    Se sigue el mismo proceso de instalación con la diferencia que se usa la carpeta "part2" dentro de postman:
 
-![](images/solucion/install.png)
+    ![](images/solucion/install.png)
+
+    ![](images/solucion/direc.png)
 
 #### Probar el resultado final de nuestra infraestructura
 
-1. Porsupuesto el endpoint de acceso a nuestro sistema será la IP pública del balanceador de carga, primero verifiquemos que los servicios básicos están funcionando, consuma los siguientes recursos:
+1. Por supuesto el endpoint de acceso a nuestro sistema será la IP pública del balanceador de carga, primero verifiquemos que los servicios básicos están funcionando, consuma los siguientes recursos:
 
-```
-http://52.155.223.248/
-http://52.155.223.248/fibonacci/1
-```
-![](images/solucion/pruebaBalanceador.png)
+    ```
+    http://52.155.223.248/
+    http://52.155.223.248/fibonacci/1
+    ```
 
-![](images/solucion/balanceadorfibo.png)
+    **Pruebas de ejecución:**
+
+    ![](images/solucion/pruebaBalanceador.png)
+
+    ![](images/solucion/balanceadorfibo.png)
 
 2. Realice las pruebas de carga con `newman` que se realizaron en la parte 1 y haga un informe comparativo donde contraste: tiempos de respuesta, cantidad de peticiones respondidas con éxito, costos de las 2 infraestrucruras, es decir, la que desarrollamos con balanceo de carga horizontal y la que se hizo con una maquina virtual escalada.
 
-![](images/solucion/config.png)
+    ![](images/solucion/config.png)
 
-![](images/solucion/config2.png)
+    ![](images/solucion/config2.png)
 
-**Máquina virtual VM1:** 
+    **Máquina virtual VM1:** 
 
-![](images/solucion/newManV1.png)
+    ![](images/solucion/newManV1.png)
 
-**Máquina virtual VM2:**
+    **Máquina virtual VM2:**
 
-![](images/solucion/newManV2.png)
+    ![](images/solucion/newManV2.png)
 
+    |Infraestructura/Criterio | Promedio de tiempo de respuesta | Peticiones Respondidas con Éxito | Costo por hora |
+    | :------------: | :------------: | :------------: | :------------: |
+    | **Con Enfoque Vertical**    | 4 min 44.4 seg  | 6 de 10   | 1,4 dólares  |
+    | **Con Enfoque Horizontal**   | 3 min 53 seg   | 19 de 20    | 0,19 dólares    | 
+    
+    * Tiempos de Respuesta:
 
+        La infraestructura con escalabilidad horizontal muestra un mejor rendimiento en términos de tiempos de respuesta promedio. Esto se debe a la distribución de la carga entre múltiples nodos, lo que permite manejar de manera más eficiente las solicitudes concurrentes.
+        
+        La infraestructura con escalabilidad vertical también muestra mejoras en comparación con la configuración original de una sola VM. Sin embargo, los tiempos de respuesta aún son más altos en comparación con la escalabilidad horizontal.
+    
+    * Cantidad de Peticiones Respondidas con Éxito:
+
+        La escalabilidad horizontal logra responder exitosamente a un mayor porcentaje de solicitudes bajo carga concurrente en comparación con la escalabilidad vertical. Esto destaca la capacidad de la infraestructura distribuida para manejar de manera efectiva la carga y mantener la disponibilidad del servicio.
+    
+    * Costos:
+
+        La escalabilidad horizontal presenta un costo por hora significativamente menor en comparación con la escalabilidad vertical. Esto se debe a que se utilizan varias VM pequeñas distribuidas, lo que permite un uso más eficiente de los recursos y una mayor flexibilidad en términos de escalabilidad.
+        
+        La escalabilidad vertical, al utilizar una única VM más grande, tiene un costo por hora más alto. Aunque puede ofrecer mejoras en el rendimiento, también puede resultar más costosa a medida que se aumentan los recursos.
+
+    la escalabilidad horizontal con balanceo de carga ofrece un mejor equilibrio entre rendimiento, disponibilidad y costos, especialmente para aplicaciones que experimentan cargas variables y requieren una mayor capacidad de respuesta frente a solicitudes concurrentes.
 
 3. Agregue una 4 maquina virtual y realice las pruebas de newman, pero esta vez no lance 2 peticiones en paralelo, sino que incrementelo a 4. Haga un informe donde presente el comportamiento de la CPU de las 4 VM y explique porque la tasa de éxito de las peticiones aumento con este estilo de escalabilidad.
 
-```
-newman run ARSW_LOAD-BALANCING_AZURE.postman_collection.json -e [ARSW_LOAD-BALANCING_AZURE].postman_environment.json -n 10 &
-newman run ARSW_LOAD-BALANCING_AZURE.postman_collection.json -e [ARSW_LOAD-BALANCING_AZURE].postman_environment.json -n 10 &
-newman run ARSW_LOAD-BALANCING_AZURE.postman_collection.json -e [ARSW_LOAD-BALANCING_AZURE].postman_environment.json -n 10 &
-newman run ARSW_LOAD-BALANCING_AZURE.postman_collection.json -e [ARSW_LOAD-BALANCING_AZURE].postman_environment.json -n 10
-```
+    ```
+    newman run ARSW_LOAD-BALANCING_AZURE.postman_collection.json -e [ARSW_LOAD-BALANCING_AZURE].postman_environment.json -n 10 &
+    newman run ARSW_LOAD-BALANCING_AZURE.postman_collection.json -e [ARSW_LOAD-BALANCING_AZURE].postman_environment.json -n 10 &
+    newman run ARSW_LOAD-BALANCING_AZURE.postman_collection.json -e [ARSW_LOAD-BALANCING_AZURE].postman_environment.json -n 10 &
+    newman run ARSW_LOAD-BALANCING_AZURE.postman_collection.json -e [ARSW_LOAD-BALANCING_AZURE].postman_environment.json -n 10
+    ```
 
-![](images/solucion/4CososVM1.png)
+    ![](images/solucion/4CososVM1.png)
 
-![](images/solucion/4CososVM2.png)
+    ![](images/solucion/4CososVM2.png)
 
-![](images/solucion/CPUVM1.png)
+    ![](images/solucion/CPUVM1.png)
 
-![](images/solucion/CPUVM2.png)
+    ![](images/solucion/CPUVM2.png)
+
+    En un entorno de balanceo de carga horizontal con múltiples VMs distribuidas, se observa un comportamiento más equilibrado en la carga de CPU entre las VMs.
+    
+    Al realizar más peticiones en paralelo, cada VM puede contribuir a manejar la carga total, evitando posibles cuellos de botella.
+    Al distribuir las peticiones entre varias VMs, el balanceo de carga maneja una mayor cantidad de solicitudes simultáneas.
+
+    La mejora en la tasa de éxito se atribuye a la capacidad del sistema para gestionar más solicitudes concurrentes al tener múltiples nodos trabajando en paralelo.
+    Al agregar más VMs y distribuir la carga, se maneja un mayor número de solicitudes simultáneas.
+    La escalabilidad horizontal permite crecer de manera más efectiva al agregar nodos adicionales según sea necesario.
+
+    La tasa de éxito del 100 % en las peticiones, que se atribuye al incremento de la concurrencia a 4 peticiones en paralelo, indica una mejora significativa en la capacidad del sistema para manejar cargas de trabajo más intensivas. 
+    
+    Al realizar más peticiones en paralelo, el sistema pudo manejarlas con éxito, lo que sugiere una mayor escalabilidad.
+    La adición de recursos, ya sea mediante el escalamiento vertical de una VM o mediante el escalamiento horizontal con varias VMs y un balanceador de carga, ha mejorado la capacidad del sistema para gestionar solicitudes concurrentes.
+
+    La capacidad de manejar todas las solicitudes con éxito, incluso bajo una carga más alta, sugiere que el sistema ahora es más robusto y resistente.
+    La resiliencia del sistema a mayores niveles de tráfico es esencial para garantizar un rendimiento constante y una experiencia del usuario sin interrupciones.
 
 **Preguntas**
 
-* ¿Cuáles son los tipos de balanceadores de carga en Azure y en qué se diferencian?, ¿Qué es SKU, qué tipos hay y en qué se diferencian?, ¿Por qué el balanceador de carga necesita una IP pública?
+* ¿Cuáles son los tipos de balanceadores de carga en Azure y en qué se diferencian?
+    
+    Azure ofrece dos tipos principales de balanceadores de carga:
+
+    * Balanceador de Carga Público: Distribuye el tráfico entrante desde Internet entre máquinas virtuales (VM) en un conjunto de disponibilidad o conjunto de máquinas virtuales. Se utiliza para aplicaciones de Internet y proporciona una IP pública para el acceso desde Internet.
+
+    * Balanceador de Carga Interno: Distribuye el tráfico entre las VM en una red virtual o entre redes virtuales conectadas. No tiene una IP pública y se utiliza para cargas de trabajo internas.
+
+    ¿Qué es SKU, qué tipos hay y en qué se diferencian?
+
+    * SKU en Azure se refiere a la especificación del nivel de servicio o capacidad de un recurso. Puede haber diferentes SKU para el mismo tipo de recurso, diferenciándose en términos de rendimiento, características y precios.
+
+        Tipos de SKU comunes incluyen:
+
+        * Básico: Proporciona funcionalidades esenciales a un precio económico.
+
+        * Estándar: Ofrece características avanzadas y mayor capacidad de rendimiento.
+
+    ¿Por qué el balanceador de carga necesita una IP pública?
+
+    * El balanceador de carga necesita una IP pública para ser accesible desde Internet. Proporciona un punto de entrada único para el tráfico entrante y distribuye ese tráfico entre las máquinas virtuales en el Backend Pool. La IP pública es la dirección a la que se dirigen las solicitudes desde Internet.
+
 * ¿Cuál es el propósito del *Backend Pool*?
+
+    El Backend Pool es un conjunto de recursos (máquinas virtuales) que recibirán el tráfico distribuido por el balanceador de carga. Especifica las máquinas virtuales que participarán en el equilibrio de carga.
+
 * ¿Cuál es el propósito del *Health Probe*?
-* ¿Cuál es el propósito de la *Load Balancing Rule*? ¿Qué tipos de sesión persistente existen, por qué esto es importante y cómo puede afectar la escalabilidad del sistema?.
+
+    La Health Probe (sonda de salud) se utiliza para monitorear la salud de las instancias del Backend Pool. Verifica si las instancias están respondiendo correctamente y, en caso contrario, las excluye temporalmente del tráfico para garantizar una distribución de carga efectiva solo entre las instancias saludables.
+
+* ¿Cuál es el propósito de la *Load Balancing Rule*? ¿Qué tipos de sesión persistente existen, por qué esto es importante y cómo puede afectar la escalabilidad del sistema?
+    
+    * La Load Balancing Rule define cómo se distribuirá el tráfico entre las instancias del Backend Pool. Especifica el puerto en el que se recibirá el tráfico y el puerto al que se dirigirá en las instancias del Backend Pool.
+
+    * Tipos de Sesión Persistente: Permite asignar una solicitud específica a la misma instancia en situaciones donde es necesario mantener la persistencia en las conexiones. Puede ser basada en IP o Cookie.
+
+        * IP Affinity: Asigna una IP específica a la misma instancia.
+        * Cookie Affinity: Asigna la misma instancia basada en cookies.
+
+    * Importancia: La sesión persistente es crucial cuando las aplicaciones requieren mantener el estado de la sesión del usuario a través de múltiples solicitudes. Sin persistencia, las solicitudes podrían dirigirse a diferentes instancias, lo que podría afectar la experiencia del usuario.
+
+    * Afectación en Escalabilidad: La sesión persistente puede afectar la escalabilidad al introducir la necesidad de mantener conexiones específicas con ciertas instancias. Esto puede limitar la capacidad de distribuir libremente el tráfico entre todas las instancias y, en consecuencia, afectar la escalabilidad horizontal.
+
 * ¿Qué es una *Virtual Network*? ¿Qué es una *Subnet*? ¿Para qué sirven los *address space* y *address range*?
+
+    * Virtual Network (Red Virtual): Es un recurso de red que permite a las máquinas virtuales comunicarse entre sí y con recursos externos. Proporciona aislamiento de red para los recursos de Azure.
+
+    * Subnet (Subred): Es una división de una red virtual en segmentos más pequeños. Permite organizar y segmentar los recursos de red dentro de una red virtual.
+
+    * Address Space y Address Range:
+
+        * Address Space: Es el rango total de direcciones IP disponibles para la red virtual.
+
+        * Address Range: Es el rango de direcciones IP específicas asignadas a una subred dentro de la red virtual.
+
 * ¿Qué son las *Availability Zone* y por qué seleccionamos 3 diferentes zonas?. ¿Qué significa que una IP sea *zone-redundant*?
+    
+    * Availability Zone (Zona de Disponibilidad): Es una ubicación física única con energía, refrigeración y red independientes. Azure proporciona redundancia y disponibilidad mejoradas al distribuir recursos entre múltiples zonas de disponibilidad.
+
+    * Zone-Redundant IP (IP Redundante por Zona): Significa que la dirección IP está asociada a recursos en múltiples zonas de disponibilidad, lo que mejora la redundancia y la disponibilidad.
+
+    La elección de tres diferentes zonas de disponibilidad tiene el propósito de mejorar la redundancia y la disponibilidad del sistema. Al distribuir las máquinas virtuales en tres zonas distintas, se asegura que, en caso de una interrupción en una zona, las otras dos zonas puedan continuar operando. Este enfoque proporciona una mayor resiliencia contra posibles fallas en una ubicación física específica.
+
 * ¿Cuál es el propósito del *Network Security Group*?
-* Informe de newman 1 (Punto 2)
+    
+    * El NSG actúa como un cortafuegos virtual que controla el tráfico hacia los recursos de Azure. Permite o deniega el tráfico basado en reglas definidas, brindando un control detallado sobre la seguridad de red.
+
 * Presente el Diagrama de Despliegue de la solución.
+
+![](images/solucion/Diagrama.png)
 
 
 
